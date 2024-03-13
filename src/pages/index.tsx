@@ -1,16 +1,13 @@
 import { NextPage } from "next";
 import React, { useState } from "react";
-import DateTimePicker from "react-datetime-picker";
-import "react-datetime-picker/dist/DateTimePicker.css";
-import "react-calendar/dist/Calendar.css";
-import "react-clock/dist/Clock.css";
 import CountdownTimer from "@/components/CountdownTimer";
 import toast, { Toaster } from "react-hot-toast";
 
 const Home: NextPage = () => {
-  const [dateValue, setDateValue] = useState<Date | null>(new Date());
+  const [dateValue, setDateValue] = useState<string>();
   const [timerStart, setTimerStart] = useState<boolean>(false);
 
+  const now = new Date().toISOString().slice(0, 16);
   const handleStartTimer = () => {
     if (dateValue !== null) {
       setTimerStart(true);
@@ -28,7 +25,7 @@ const Home: NextPage = () => {
         >
           {timerStart ? (
             <section className="text-center">
-              <CountdownTimer targetDate={dateValue as Date} />
+              <CountdownTimer targetDate={dateValue as string} />
               <button
                 onClick={() => {
                   setTimerStart(false);
@@ -45,12 +42,12 @@ const Home: NextPage = () => {
               </h1>
 
               <div className="  p-2 text-blue-950   my-6">
-                <DateTimePicker
-                  calendarClassName={"text-black"}
-                  tileClassName={"text-black"}
-                  onChange={setDateValue}
+                <input
+                  className="border border-gray-300 focus:ring-indigo-500 focus:border-indigo-500 w-auto mx-auto p-2 rounded-md bg-gray-200"
+                  type={"datetime-local"}
                   value={dateValue}
-                  minDate={new Date()}
+                  onChange={(e) => setDateValue(e.target.value)}
+                  min={now}
                 />
               </div>
               <div>

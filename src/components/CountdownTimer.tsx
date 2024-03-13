@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import Confetti from "react-confetti";
 
 interface TimeLeft {
   days: number;
@@ -29,35 +30,51 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
   };
 
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
+  const [isExpired, setIsExpired] = useState<boolean>(false);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
     }, 1000);
 
+    const difference = +new Date(targetDate) - +new Date();
+    if (difference <= 0) {
+      setIsExpired(true);
+    }
+
     return () => clearTimeout(timer);
   });
 
+  const containerWidth = document.getElementById("container")?.clientWidth;
+  const containerHeight = document.getElementById("container")?.clientHeight;
   return (
     <div>
-      <h2 className=" font-bold text-xl mt-12 text-center">Time Remaining:</h2>
+      {isExpired && (
+        <Confetti width={containerWidth} height={containerHeight} />
+      )}
+      <h2 className=" font-bold text-xl text-center my-4">Time Remaining:</h2>
+
       <section className="my-8">
-        <div className="flex flex-row justify-center items-center gap-14">
+        <div className="flex flex-row justify-center items-center text-center md:gap-14 gap-6">
           <div>
-            <p className="text-7xl">{timeLeft.days.toString()}</p>
-            <p className="font-medium text-lg">Days</p>
+            <p className="md:text-7xl text-4xl">{timeLeft.days.toString()}</p>
+            <p className="font-medium md:text-lg text-sm">Days</p>
           </div>
           <div>
-            <p className="text-7xl">{timeLeft.hours.toString()}</p>
-            <p className="font-medium text-lg">Hours</p>
+            <p className="md:text-7xl text-4xl">{timeLeft.hours.toString()}</p>
+            <p className="font-medium md:text-lg text-sm">Hours</p>
           </div>
           <div>
-            <p className="text-7xl">{timeLeft.minutes.toString()}</p>
-            <p className="font-medium text-lg">Minutes</p>
+            <p className="md:text-7xl text-4xl">
+              {timeLeft.minutes.toString()}
+            </p>
+            <p className="font-medium md:text-lg text-sm">Minutes</p>
           </div>
           <div>
-            <p className="text-7xl">{timeLeft.seconds.toString()}</p>
-            <p className="font-medium text-lg">Seconds</p>
+            <p className="md:text-7xl text-4xl">
+              {timeLeft.seconds.toString()}
+            </p>
+            <p className="font-medium md:text-lg text-sm">Seconds</p>
           </div>
         </div>
       </section>

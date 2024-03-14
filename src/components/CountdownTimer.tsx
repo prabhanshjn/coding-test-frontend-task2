@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import Confetti from "react-confetti";
 
+// Interface to define the structure of time left in countdown display
 interface TimeLeft {
   days: number;
   hours: number;
@@ -8,11 +9,13 @@ interface TimeLeft {
   seconds: number;
 }
 
+// datetime-local prop as a targetDate
 interface CountdownTimerProps {
   targetDate: string;
 }
 
 const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
+  // Function to calculate time left until the target date
   const calculateTimeLeft = (): TimeLeft => {
     const difference = +new Date(targetDate) - +new Date();
     let timeLeft: TimeLeft = { days: 0, hours: 0, minutes: 0, seconds: 0 };
@@ -32,6 +35,7 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
   const [timeLeft, setTimeLeft] = useState<TimeLeft>(calculateTimeLeft());
   const [isExpired, setIsExpired] = useState<boolean>(false);
 
+  // Effect to update time left every second and check for expiration
   useEffect(() => {
     const timer = setTimeout(() => {
       setTimeLeft(calculateTimeLeft());
@@ -42,11 +46,14 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({ targetDate }) => {
       setIsExpired(true);
     }
 
+    //State cleanup
     return () => clearTimeout(timer);
   });
 
+  // Get container dimensions for Confetti Celebration when timer ends
   const containerWidth = document.getElementById("container")?.clientWidth;
   const containerHeight = document.getElementById("container")?.clientHeight;
+
   return (
     <div>
       {isExpired && (
